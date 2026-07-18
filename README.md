@@ -17,3 +17,5 @@ Além disso, é possível configurar o comportamento do sistema através do `con
 * ✅ Configuração simples e totalmente personalizável.
 
 Proteja seus recursos e mantenha seu servidor mais seguro contra tentativas de extração não autorizada.
+
+### CRÉDITOS AO 77ryoiki
