@@ -1,21 +1,89 @@
-# 🛡️ ANTI-DUMPER
+# CRÉDITOS TOTALMENTE PARA O 77ryoiki
 
-O **ANTI-DUMPER** é um sistema de proteção para servidores FiveM desenvolvido para detectar tentativas de dump de recursos e identificar automaticamente o responsável.
 
-Quando uma tentativa de dump é detectada, o sistema coleta informações do jogador, como **ID**, **Steam**, **License**, **Discord**, **IP** (quando disponível) e outros identificadores, enviando tudo para um **webhook do Discord** para facilitar a identificação e auditoria.
+# ANT-DUMPER Multi-Framework
 
-Além disso, é possível configurar o comportamento do sistema através do `config.lua`, permitindo que o jogador seja **expulso (Kick)** ou **banido automaticamente** após a detecção.
+Recurso sem dependências obrigatórias, compatível com:
 
-### Recursos
+- Standalone
+- QBCore
+- QBox (`qbx_core`)
+- Creative
+- vRP
 
-* ✅ Detecção automática de tentativas de dump.
-* ✅ Logs completos enviados para o Discord.
-* ✅ Coleta de identificadores do jogador (ID, License, Steam, Discord, IP e outros disponíveis).
-* ✅ Sistema configurável para **Kick** ou **Ban** automático.
-* ✅ Sistema de banimentos próprio.
-* ✅ Compatível com **Standalone**, **QBCore**, **QBox**, **Creative** e **vRP**.
-* ✅ Configuração simples e totalmente personalizável.
+## Instalação
 
-Proteja seus recursos e mantenha seu servidor mais seguro contra tentativas de extração não autorizada.
+1. Coloque a pasta dentro de `resources`.
+2. Renomeie a pasta, caso queira; o NUI detecta o nome automaticamente.
+3. Configure `config.lua`.
+4. Adicione no `server.cfg`:
 
-### CRÉDITOS AO 77ryoiki
+```cfg
+ensure ANT-DUMPER-FXAP-COMMUNITY
+```
+
+O nome usado no `ensure` deve ser exatamente o nome da pasta.
+
+## Framework
+
+Use no `config.lua`:
+
+```lua
+Config.Framework = "auto"
+```
+
+Valores aceitos: `auto`, `standalone`, `qbcore`, `qbox`, `creative` e `vrp`.
+
+Em modo automático, Creative e vRP podem ser identificados como `vrp`, pois normalmente usam o mesmo resource. Isso não impede o funcionamento. Para exibir `creative` nos logs, selecione-o manualmente.
+
+## Banimento
+
+O recurso possui banimento próprio em `bans.json`, baseado prioritariamente na license do jogador. Assim, ele não depende da tabela de bans de nenhum framework.
+
+Também são fornecidos os exports de servidor:
+
+```lua
+exports["NOME_DO_RECURSO"]:IsIdentifierBanned(identifier)
+exports["NOME_DO_RECURSO"]:UnbanIdentifier(identifier)
+exports["NOME_DO_RECURSO"]:GetBans()
+```
+
+## Bypass administrativo
+
+Por padrão, a ACE é `antidumper.bypass`.
+
+Exemplo por license:
+
+```cfg
+add_ace identifier.license:COLOQUE_A_LICENSE_AQUI antidumper.bypass allow
+```
+
+Exemplo por grupo:
+
+```cfg
+add_ace group.admin antidumper.bypass allow
+```
+
+## Webhook
+
+Defina em `config.lua`:
+
+```lua
+Config.Webhook.Url = "SEU_WEBHOOK"
+```
+
+Deixe vazio para não enviar logs ao Discord.
+
+## Comando de desbanimento
+
+Pelo console do servidor:
+
+```cfg
+antidumper_unban license:IDENTIFICADOR
+```
+
+Para permitir o comando dentro do jogo:
+
+```cfg
+add_ace group.admin antidumper.admin allow
+```

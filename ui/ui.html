@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ANT-DUMPER</title>
+</head>
+<body>
+<script>
+(() => {
+    let enabled = false;
+    let triggered = false;
+    let timer = null;
+
+    const reportDetection = () => {
+        if (!enabled || triggered) return;
+
+        triggered = true;
+
+        fetch(`https://${GetParentResourceName()}/loadNuis`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json; charset=UTF-8' },
+            body: JSON.stringify({ detected: true })
+        }).catch(() => {});
+    };
+
+    const probe = () => {
+        if (!enabled || triggered) return;
+
+        const detector = new Image();
+
+        Object.defineProperty(detector, 'id', {
+            configurable: true,
+            get: reportDetection
+        });
+
+        console.log('%cSistema carregado', 'color: transparent; font-size: 1px;', detector);
+    };
+
+    const configure = (shouldEnable) => {
+        enabled = shouldEnable === true;
+        triggered = false;
+
+        if (timer) {
+            clearInterval(timer);
+            timer = null;
+        }
+
+        if (enabled) {
+            probe();
+            timer = setInterval(probe, 2500);
+        }
+    };
+
+    window.addEventListener('message', (event) => {
+        if (event.data?.action === 'configure') {
+            configure(event.data.enabled);
+        }
+    });
+})();
+</script>
+</body>
+</html>
